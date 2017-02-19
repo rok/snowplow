@@ -1,0 +1,44 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: Provision EC2 instances
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tags: provision
+
+  roles:
+    - provision_ec2
+
+  post_tasks:
+    - name: Refresh EC2 inventory
+      shell: inventory/ec2.py --refresh-cache
+
+    - meta: refresh_inventory
+
+
+- name: Install and configure snowplow.
+  hosts: "tag_Project_{{ project }}:&tag_Name_{{ project }}"
+  connection: ssh
+  become: yes
+  gather_facts: no
+  vars_files:
+    - "group_vars/all"
+
+  pre_tasks:
+    - name: Install python2 in raw mode
+      raw: sudo apt-get install -y python
+
+  roles:
+    - common
+    - collector
+
+
+- name: Provision ELBs, attach them to instances, map to domains
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tags: elb
+
+  roles:
+    - provision_elb

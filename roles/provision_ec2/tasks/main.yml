@@ -1,0 +1,8 @@
+---
+
+- include: iam.yml
+- include: key.yml
+- include: vpc.yml
+- include: sg.yml
+- include: ec2.yml
+- include: kinesis.yml

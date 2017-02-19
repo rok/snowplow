@@ -1,0 +1,41 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: Create AWS certificates for the SSL termination on loadbalancers
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: Read certificate list
+    command: "aws acm list-certificates --region {{ region }}"
+    register: output
+
+  - name: Create a list of certificates to be created
+    set_fact:
+      create_certs: "{{ domains | difference(output.stdout | from_json | json_query('CertificateSummaryList[*].DomainName')) }}"
+
+  - name: Ceritficates will be created for the following domains
+    debug:
+      msg: "{{ create_certs }}"
+
+  - name: Create certificates for the new domains
+    command: >
+      "aws acm request-certificate"
+        "--domain-name {{ item }}"
+        "--idempotency-token {{ item | regex_replace('\.', '') }}"
+        "--region {{ region }}"
+    with_items: "{{ create_certs }}"
+
+  - name: Read certificate list
+    command: "aws acm list-certificates --region {{ region }}"
+    register: output
+
+  - name: Tag only the new certificates
+    command: >
+      "aws acm add-tags-to-certificate"
+        "--certificate-arn {{ item.CertificateArn }}"
+        "--tags Key=Name,Value={{ item.DomainName }} Key=Project,Value={{ project }}"
+        "--region {{ region }}"
+    with_items: "{{ (output.stdout | from_json).CertificateSummaryList }}"
+    when: "{{ item.DomainName in create_certs }}"

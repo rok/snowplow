@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+
+[program:snowplow_collector]
+command={{ snowplow_folder }}/collector.sh
+redirect_stderr=true
+stdout_logfile={{ snowplow_log_folder }}/collector.log
+autostart=true
+autorestart=false
+stopasgroup=true
+user=root
+directory={{ snowplow_folder }}

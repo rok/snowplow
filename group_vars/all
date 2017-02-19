@@ -1,0 +1,44 @@
+---
+
+project: snowplow
+region: us-east-1
+keyfile: ~/.ssh/id_rsa.pub
+
+# EC2
+# image: ami-0ae77879 # ubuntu trusty 16.04 (ami-26e70c49 @ eu-central-1)
+image: ami-6edd3078 # Ubuntu Server 16.04 LTS (HVM), SSD @ us-east-1
+instances_count: 1 # count per one subnet
+instances_type: t2.micro # m4.4xlarge # t2.micro
+instances_data_size: 50
+instances_device_name: /dev/sda1
+
+# VPC
+vpc_name: "{{ project }}-vpc"
+vpc_cidr_block: 172.22.0.0/16
+vpc_subnets:
+  - cidr: 172.22.1.0/24 
+    az: "{{ region }}a"
+    resource_tags: { "Name": "{{ project }}" }
+sg_name: "{{ project }}-security-group"
+
+domains:
+  - c.youstar.org
+
+cookie_name: "{{ project }}-cookie"
+
+snowplow_folder: /opt/snowplow
+snowplow_log_folder: /var/log/snowplow
+snowplow_config_folder: /etc/snowplow
+
+snowplow_iam_role: snowplow
+iam_policy_file: files/snowplow_policy.json
+
+# Snowplow settings
+collector:
+  collectorShardCount: 1
+  collectorSink: kinesis # stdout
+  collectorKinesisStreamGoodName: collectorGood
+  collectorKinesisStreamBadName: bad
+  collectorKafkaBrokers: ""
+  collectorKafkaTopicGoodName: ""
+  collectorKafkaTopicBadName: ""

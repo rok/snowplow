@@ -1,0 +1,59 @@
+---
+
+- name: Create required folders
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ snowplow_folder }}"
+    - "{{ snowplow_config_folder }}"
+    - "{{ snowplow_log_folder }}"
+  tags: collector
+
+- name: Check if collector is already downloaded
+  stat:
+    path: "{{ snowplow_folder }}/{{ collector_binary }}"
+  register: downloaded
+  tags: collector
+
+- name: Download and unarchive the binary
+  unarchive:
+    src: "{{ collector_url }}"
+    dest: "{{ snowplow_folder }}"
+    copy: no
+    mode: 0700
+  when: not downloaded.stat.exists
+  tags: collector
+
+- name: Create config file
+  template:
+    src: collector.conf.j2
+    dest: "{{ snowplow_config_folder }}/collector.conf"
+    mode: 0700
+  tags: collector
+
+- name: Create launcher files
+  template:
+    src: "collector.sh.j2"
+    dest: "{{ snowplow_folder }}/collector.sh"
+    mode: 0700
+  tags: collector
+
+- name: Create supervisor config file
+  template:
+    src: snowplow_collector.conf.j2
+    dest: /etc/supervisor/conf.d/snowplow_collector.conf
+    mode: 0600
+  tags: collector
+
+- name: Load supervisor configs
+  supervisorctl:
+    name: snowplow_collector
+    state: present
+  tags: collector
+
+- name: Restart services with supervisor
+  supervisorctl:
+    name: snowplow_collector
+    state: restarted
+  tags: collector

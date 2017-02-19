@@ -1,0 +1,78 @@
+---
+
+- name: Find snowplow instances
+  ec2_remote_facts:
+    region: "{{ region }}"
+    filters:
+      instance-state-name: running
+      "tag:Name": "{{ project }}"
+      "tag:Project": "{{ project }}"
+  register: snowplow_instances
+  tags: provision_elb
+
+- name: Read VPC subnets
+  ec2_vpc_subnet_facts:
+    filters:
+      "tag:Name" : "{{ project }}"
+    region: "{{ region }}"
+  register: subnets
+  tags: provision_elb
+
+- name: Read certificate list
+  command: "aws acm list-certificates --region {{ region }}"
+  register: output
+  tags: provision_elb
+
+- name: Create a load balancer for ingoing traffic
+  ec2_elb_lb:
+    name: "{{ item.DomainName | regex_replace('\\.', '-') }}"
+    state: present
+    region: "{{ region }}"
+    instance_ids: "{{ snowplow_instances.instances | json_query('[*].id') }}"
+    subnets: "{{ subnets.subnets[0].id }}"
+    security_group_ids: "{{ snowplow_instances.instances[0].groups[0].id }}"
+    listeners:
+    - protocol: https
+      instance_protocol: http
+      load_balancer_port: 443
+      instance_port: 8080
+      ssl_certificate_id: "{{ item.CertificateArn }}"
+      health_check:
+        ping_protocol: http
+        ping_port: 8080
+        ping_path: "/health"
+        response_timeout: 5
+        interval: 30
+        unhealthy_threshold: 2
+        healthy_threshold: 10
+      stickiness:
+        type: application
+        enabled: yes
+        cookie: "{{ cookie_name }}"
+  with_items: "{{ output.stdout | from_json | json_query('CertificateSummaryList[*]') }}"
+  when: "{{ item.DomainName in domains }}"
+  tags: provision_elb
+
+- name: Get elbs
+  ec2_elb_facts:
+    region: "{{ region }}"
+    names: "{{ item | regex_replace('\\.', '-') }}"
+  register: elb_facts
+  with_items: 
+    - "{{ domains }}"
+  tags: provision_elb
+
+- name: Enter domain to ELB mappings into route53
+  route53:
+    command: create
+    zone: "{{ item.0 | regex_replace('^\\w+\\.','') }}"
+    record: "{{ item.0 }}"
+    type: CNAME
+    ttl: 7200
+    value: "{{ item.1.elbs[0].dns_name }}"
+    wait: yes
+    overwrite: yes
+  with_together: 
+    - "{{ domains }}"
+    - "{{ elb_facts.results }}"
+  tags: provision_elb

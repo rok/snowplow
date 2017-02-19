@@ -1,0 +1,17 @@
+---
+ 
+- name: Create iam role for snowplow
+  iam:
+    iam_type: role
+    name: "{{ snowplow_iam_role }}"
+    state: present
+  tags: iam
+
+- name: Create iam policy for snowplow machines
+  iam_policy:
+    iam_type: role
+    iam_name: "{{ snowplow_iam_role }}"
+    policy_name: "{{ snowplow_iam_role }}"
+    state: present
+    policy_document: "{{ iam_policy_file }}"
+  tags: iam

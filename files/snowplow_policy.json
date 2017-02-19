@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kinesis:*",
+        "iam:*",
+        "cloudwatch:*",
+        "ec2:*",
+        "cloudformation:*",
+        "cloudfront:*",
+        "logs:*",
+        "dynamodb:*",
+        "sns:*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}

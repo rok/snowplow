@@ -1,0 +1,4 @@
+#!/bin/bash -l
+# {{ ansible_managed }}
+env
+exec {{ snowplow_folder }}/{{ collector_binary }} --config {{ snowplow_config_folder }}/collector.conf $@
