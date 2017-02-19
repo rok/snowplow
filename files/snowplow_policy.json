@@ -4,6 +4,10 @@
     {
       "Effect": "Allow",
       "Action": [
+        "acm:DescribeCertificate",
+        "acm:ListCertificate",
+        "autoscaling:*",
+        "elasticloadbalancing:*",
         "kinesis:*",
         "iam:*",
         "cloudwatch:*",
