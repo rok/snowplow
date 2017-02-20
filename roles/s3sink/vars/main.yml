@@ -1,5 +1,5 @@
 s3sink_url: http://dl.bintray.com/snowplow/snowplow-generic/kinesis_s3_0.4.1.zip
-s3sink_binary: snowplow-s3-sink-0-4-1
+s3sink_binary: snowplow-kinesis-s3-0.4.1
 
 sinkKinesisInStreamName: enrichGood
 sinkKinesisOutStreamName: bad
