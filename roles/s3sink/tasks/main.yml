@@ -8,52 +8,52 @@
     - "{{ snowplow_folder }}"
     - "{{ snowplow_config_folder }}"
     - "{{ snowplow_log_folder }}"
-  tags: collector
+  tags: s3sink
 
 - name: Check if collector is already downloaded
   stat:
-    path: "{{ snowplow_folder }}/{{ collector_binary }}"
+    path: "{{ snowplow_folder }}/{{ s3sink_binary }}"
   register: downloaded
-  tags: collector
+  tags: s3sink
 
 - name: Download and unarchive the binary
   unarchive:
-    src: "{{ collector_url }}"
+    src: "{{ s3sink_url }}"
     dest: "{{ snowplow_folder }}"
     copy: no
     mode: 0700
   when: not downloaded.stat.exists
-  tags: collector
+  tags: s3sink
 
 - name: Create config file
   template:
-    src: collector.conf.j2
-    dest: "{{ snowplow_config_folder }}/collector.conf"
+    src: s3sink.conf.j2
+    dest: "{{ snowplow_config_folder }}/s3sink.conf"
     mode: 0700
-  tags: collector
+  tags: s3sink
 
-- name: Create launcher file
+- name: Create launcher files
   template:
-    src: "collector.sh.j2"
-    dest: "{{ snowplow_folder }}/collector.sh"
+    src: "s3sink.sh.j2"
+    dest: "{{ snowplow_folder }}/s3sink.sh"
     mode: 0700
-  tags: collector
+  tags: s3sink
 
 - name: Create supervisor config file
   template:
-    src: snowplow_collector.conf.j2
-    dest: /etc/supervisor/conf.d/snowplow_collector.conf
+    src: snowplow_s3sink.conf.j2
+    dest: /etc/supervisor/conf.d/snowplow_s3sink.conf
     mode: 0600
-  tags: collector
+  tags: s3sink
 
 - name: Load supervisor configs
   supervisorctl:
-    name: snowplow_collector
+    name: snowplow_s3sink
     state: present
-  tags: collector
+  tags: s3sink
 
 - name: Restart services with supervisor
   supervisorctl:
-    name: snowplow_collector
+    name: snowplow_s3sink
     state: restarted
-  tags: collector
+  tags: s3sink

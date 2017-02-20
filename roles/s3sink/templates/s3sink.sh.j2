@@ -1,0 +1,4 @@
+#!/bin/bash -l
+# {{ ansible_managed }}
+env
+exec {{ snowplow_folder }}/{{ s3sink_binary }} --config {{ snowplow_config_folder }}/s3sink.conf $@

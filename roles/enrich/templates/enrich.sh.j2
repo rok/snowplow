@@ -1,0 +1,8 @@
+#!/bin/bash -l
+# {{ ansible_managed }}
+env
+exec {{ snowplow_folder }}/{{ enrich_binary }} \
+  --config {{ snowplow_config_folder }}/enrich.conf \
+  --enrichments 'file:{{ snowplow_config_folder }}/enrichments/' \
+  --resolver 'file:{{ snowplow_config_folder }}/iglu_resolver.json' \
+  $@

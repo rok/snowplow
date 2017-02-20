@@ -1,0 +1,17 @@
+s3sink_url: http://dl.bintray.com/snowplow/snowplow-generic/kinesis_s3_0.4.1.zip
+s3sink_binary: snowplow-s3-sink-0-4-1
+
+sinkKinesisInStreamName: enrichGood
+sinkKinesisOutStreamName: bad
+sinkKinesisS3Bucket: snowplowenriched
+sinkKinesisRegion: "{{ region }}"
+sinkKinesisS3Region: "{{ region }}"
+sinkKinesisAppName: snowplow_s3sink
+sinkLzoAppName: snowplow_s3sink
+sinkKinesisFormat: gzip
+sinkKinesisMaxRecords: 100
+sinkKinesisMaxTimeout: 30000
+sinkLzoBufferByteThreshold: 128000000
+sinkLzoBufferRecordThreshold: 100000
+sinkLzoBufferTimeThreshold: 3600000
+sinkLzoLogLevel: ERROR

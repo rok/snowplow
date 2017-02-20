@@ -1,17 +1,13 @@
 ---
 
-- name: Create good stream
+- name: Create Kinesis streams
   command: >
     aws kinesis create-stream
-      --stream-name "{{ collector.collectorKinesisStreamGoodName }}"
-      --shard-count "{{ collector.collectorShardCount }}"
+      --stream-name "{{ item.name }}"
+      --shard-count "{{ item.shards }}"
       --region "{{ region }}"
+  with_items: "{{ kinesis_streams }}"
   ignore_errors: yes
-
-- name: Create bad stream
-  command: >
-    aws kinesis create-stream
-      --stream-name "{{ collector.collectorKinesisStreamBadName }}"
-      --shard-count "{{ collector.collectorShardCount }}"
-      --region "{{ region }}"
-  ignore_errors: yes
+  tags:
+    - provision
+    - kinesis

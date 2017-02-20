@@ -1,7 +1,7 @@
 #!/usr/bin/env ansible-playbook
 ---
 
-- name: Provision EC2 instances
+- name: Provision EC2 instances and kinesis streams
   hosts: localhost
   connection: local
   gather_facts: no
@@ -32,6 +32,8 @@
   roles:
     - common
     - collector
+    - enrich
+    - s3sink
 
 
 - name: Provision ELBs, attach them to instances, map to domains

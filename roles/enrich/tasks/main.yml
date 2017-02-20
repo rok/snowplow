@@ -1,0 +1,67 @@
+---
+
+- name: Create required folders
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ snowplow_folder }}"
+    - "{{ snowplow_config_folder }}"
+    - "{{ snowplow_log_folder }}"
+    - "{{ snowplow_enrichments_folder }}"
+  tags: enrich
+
+- name: Check if enrich is already downloaded
+  stat:
+    path: "{{ snowplow_folder }}/{{ enrich_binary }}"
+  register: downloaded
+  tags: enrich
+
+- name: Download and unarchive the binary
+  unarchive:
+    src: "{{ enrich_url }}"
+    dest: "{{ snowplow_folder }}"
+    copy: no
+    mode: 0700
+  when: not downloaded.stat.exists
+  tags: enrich
+
+- name: Create iglu resolver file
+  template:
+    src: iglu_resolver.json.j2
+    dest: "{{ snowplow_config_folder }}/iglu_resolver.json"
+    mode: 0755
+  tags: enrich
+
+- name: Create config file
+  template:
+    src: enrich.conf.j2
+    dest: "{{ snowplow_config_folder }}/enrich.conf"
+    mode: 0700
+  tags: enrich
+
+- name: Create launcher file
+  template:
+    src: "enrich.sh.j2"
+    dest: "{{ snowplow_folder }}/enrich.sh"
+    mode: 0700
+  tags: enrich
+
+- name: Create supervisor config file
+  template:
+    src: snowplow_enrich.conf.j2
+    dest: /etc/supervisor/conf.d/snowplow_enrich.conf
+    mode: 0600
+  tags: enrich
+
+- name: Load supervisor configs
+  supervisorctl:
+    name: snowplow_enrich
+    state: present
+  tags: enrich
+
+- name: Restart services with supervisor
+  supervisorctl:
+    name: snowplow_enrich
+    state: restarted
+  tags: enrich

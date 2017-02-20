@@ -1,0 +1,17 @@
+enrich_url: http://dl.bintray.com/snowplow/snowplow-generic/snowplow_stream_enrich_0.10.0.zip
+enrich_binary: snowplow-stream-enrich-0.10.0
+
+enrichKafkaBrokers: ""
+enrichStreamsInRaw: collectorGood
+enrichStreamsBufferByteThreshold: 3000
+enrichStreamsBufferTimeThreshold: 60000
+enrichStreamsBufferRecordThreshold: 500
+enrichStreamsOutEnriched: enrichGood
+enrichStreamsOutBad: bad
+enrichStreamsOutMinBackoff: 3000
+enrichStreamsOutMaxBackoff: 600000
+enrichStreamsAppName: "snowplow_stream_enrich"
+enrichStreamsRegion: "{{ region }}"
+collectorUri: "0.0.0.0"
+enrichAppName: "snowplow_enrich"
+

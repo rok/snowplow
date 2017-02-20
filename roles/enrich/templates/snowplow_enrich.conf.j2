@@ -1,9 +1,9 @@
 # {{ ansible_managed }}
 
-[program:snowplow_collector]
-command={{ snowplow_folder }}/collector.sh
+[program:snowplow_enrich]
+command={{ snowplow_folder }}/enrich.sh
 redirect_stderr=true
-stdout_logfile={{ snowplow_log_folder }}/collector.log
+stdout_logfile={{ snowplow_log_folder }}/enrich.log
 autostart=true
 autorestart=true
 stopasgroup=true

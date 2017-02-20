@@ -29,16 +29,21 @@ cookie_name: "{{ project }}-cookie"
 snowplow_folder: /opt/snowplow
 snowplow_log_folder: /var/log/snowplow
 snowplow_config_folder: /etc/snowplow
+snowplow_enrichments_folder: "{{ snowplow_config_folder }}/enrichments/"
 
 snowplow_iam_role: snowplow
 iam_policy_file: files/snowplow_policy.json
 
-# Snowplow settings
-collector:
-  collectorShardCount: 1
-  collectorSink: kinesis # stdout
-  collectorKinesisStreamGoodName: collectorGood
-  collectorKinesisStreamBadName: bad
-  collectorKafkaBrokers: ""
-  collectorKafkaTopicGoodName: ""
-  collectorKafkaTopicBadName: ""
+# Kinesis streams:
+collectorKinesisGood: collectorGood
+collectorKinesisBad: bad
+enrichKinesisGood: enrichGood
+enrichKinesisBad: bad
+
+kinesis_streams:
+  - name: "{{ collectorKinesisGood }}"
+    shards: 1
+  - name: "{{ enrichKinesisGood }}"
+    shards: 1
+  - name: bad
+    shards: 1
