@@ -24,6 +24,7 @@
   gather_facts: no
   vars_files:
     - "group_vars/all"
+  tags: install
 
   pre_tasks:
     - name: Install python2 in raw mode

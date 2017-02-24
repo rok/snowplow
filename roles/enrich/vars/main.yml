@@ -13,5 +13,5 @@ enrichStreamsOutMaxBackoff: 600000
 enrichStreamsAppName: "snowplow_stream_enrich"
 enrichStreamsRegion: "{{ region }}"
 collectorUri: "0.0.0.0"
-enrichAppName: "snowplow_enrich"
+# enrichAppName: "snowplow_enrich"
 

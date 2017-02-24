@@ -3,10 +3,10 @@ s3sink_binary: snowplow-kinesis-s3-0.4.1
 
 sinkKinesisInStreamName: enrichGood
 sinkKinesisOutStreamName: bad
-sinkKinesisS3Bucket: snowplowenriched
+sinkKinesisS3Bucket: snowplowenrichedd
 sinkKinesisRegion: "{{ region }}"
 sinkKinesisS3Region: "{{ region }}"
-sinkKinesisAppName: snowplow_s3sink
+#sinkKinesisAppName: snowplow_s3sink
 sinkLzoAppName: snowplow_s3sink
 sinkKinesisFormat: gzip
 sinkKinesisMaxRecords: 100
@@ -15,3 +15,4 @@ sinkLzoBufferByteThreshold: 128000000
 sinkLzoBufferRecordThreshold: 100000
 sinkLzoBufferTimeThreshold: 3600000
 sinkLzoLogLevel: ERROR
+collectorMonitoring: False

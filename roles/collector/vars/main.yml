@@ -2,30 +2,21 @@ collector_url: http://dl.bintray.com/snowplow/snowplow-generic/snowplow_scala_st
 collector_binary: snowplow-stream-collector-0.9.0
 
 shard_count_collector: 1
-# Snowplow settings
-collector:
-  collectorShardCount: 1
-  collectorSink: kinesis # stdout
-  collectorKinesisStreamGoodName: collectorGood
-  collectorKinesisStreamBadName: bad
-  collectorKafkaBrokers: ""
-  collectorKafkaTopicGoodName: ""
-  collectorKafkaTopicBadName: ""
-
 collectorPort: 8080
 collectorCookieExpiration: 365
 collectorCookieName: "{{ cookie_name }}"
 collectorCookieDomain: "{{ cookie_name }}"
-collectorSink: "{{ collector.collectorSink }}" # stdout
+collectorSink: kinesis # stdout
 collectorSinkKinesisStreamRegion: "{{ region }}"
-collectorKinesisStreamGoodName: "{{ collector.collectorKinesisStreamGoodName }}"
-collectorKinesisStreamBadName: "{{ collector.collectorKinesisStreamBadName }}"
+collectorKinesisStreamGoodName: collectorGood
+collectorKinesisStreamBadName: bad
 collectorSinkKinesisMinBackoffMillis: 3000
 collectorSinkKinesisMaxBackoffMillis: 600000
-collectorKafkaBrokers: "{{ collector.collectorKafkaBrokers }}"
-collectorKafkaTopicGoodName: "{{ collector.collectorKafkaTopicGoodName }}"
-collectorKafkaTopicBadName: "{{ collector.collectorKafkaTopicBadName }}"
+collectorKafkaBrokers: ""
+collectorKafkaTopicGoodName: ""
+collectorKafkaTopicBadName: ""
 collectorSinkBufferByteThreshold: 4000000
 collectorSinkBufferRecordThreshold: 500
 collectorSinkBufferTimeThreshold: 60000
 collectorProduction: no
+collectorMonitoring: False

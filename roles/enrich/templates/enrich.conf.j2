@@ -81,7 +81,8 @@ enrich {
     # "app-name" is used for a DynamoDB table to maintain stream state.
     # "app-name" is used as the Kafka consumer group ID.
     # You can set it automatically using: "SnowplowKinesisEnrich-$\\{enrich.streams.in.raw\\}"
-    app-name: "{{enrichStreamsAppName}}"
+#    app-name: "{{enrichStreamsAppName}}"
+    app-name: "SnowplowKinesisEnrich-$\\{enrich.streams.in.raw\\}"
 
     # LATEST: most recent data.
     # TRIM_HORIZON: oldest available data.
@@ -92,6 +93,7 @@ enrich {
     region: "{{enrichStreamsRegion}}"
   }
 
+{% if collectorMonitoring %}
   # Optional section for tracking endpoints
   monitoring {
     snowplow {
@@ -101,4 +103,5 @@ enrich {
       method: "GET"
     }
   }
+{% endif %}
 }
