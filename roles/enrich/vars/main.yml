@@ -4,13 +4,13 @@ enrich_binary: snowplow-stream-enrich-0.10.0
 enrichKafkaBrokers: ""
 enrichStreamsInRaw: collectorGood
 enrichStreamsBufferByteThreshold: 3000
-enrichStreamsBufferTimeThreshold: 60000
+enrichStreamsBufferTimeThreshold: 5000
 enrichStreamsBufferRecordThreshold: 500
 enrichStreamsOutEnriched: enrichGood
 enrichStreamsOutBad: bad
 enrichStreamsOutMinBackoff: 3000
 enrichStreamsOutMaxBackoff: 600000
-enrichStreamsAppName: "snowplow_stream_enrich"
+# enrichStreamsAppName: "snowplow_stream_enrich"
 enrichStreamsRegion: "{{ region }}"
 collectorUri: "0.0.0.0"
 # enrichAppName: "snowplow_enrich"

@@ -13,6 +13,6 @@ sinkKinesisMaxRecords: 100
 sinkKinesisMaxTimeout: 30000
 sinkLzoBufferByteThreshold: 128000000
 sinkLzoBufferRecordThreshold: 100000
-sinkLzoBufferTimeThreshold: 3600000
+sinkLzoBufferTimeThreshold: 60000
 sinkLzoLogLevel: ERROR
 collectorMonitoring: False

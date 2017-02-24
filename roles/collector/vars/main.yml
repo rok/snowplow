@@ -17,6 +17,6 @@ collectorKafkaTopicGoodName: ""
 collectorKafkaTopicBadName: ""
 collectorSinkBufferByteThreshold: 4000000
 collectorSinkBufferRecordThreshold: 500
-collectorSinkBufferTimeThreshold: 60000
+collectorSinkBufferTimeThreshold: 5000
 collectorProduction: no
 collectorMonitoring: False
