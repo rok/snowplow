@@ -16,7 +16,8 @@
         "cloudfront:*",
         "logs:*",
         "dynamodb:*",
-        "sns:*"
+        "sns:*",
+        "s3:*"
       ],
       "Resource": [
         "*"
